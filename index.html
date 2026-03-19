@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eid Wish</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.gift-box {
+    width: 150px;
+    height: 150px;
+    background: crimson;
+    position: relative;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 0 20px gold;
+    z-index: 2;
+}
+
+.lid {
+    width: 150px;
+    height: 40px;
+    background: darkred;
+    position: absolute;
+    top: -40px;
+    left: 0;
+    border-radius: 10px;
+    transition: 0.6s;
+}
+
+.ribbon {
+    width: 30px;
+    height: 150px;
+    background: gold;
+    position: absolute;
+    left: 60px;
+}
+
+.ribbon-h {
+    width: 150px;
+    height: 30px;
+    background: gold;
+    position: absolute;
+    top: 60px;
+}
+
+.open .lid {
+    transform: translateY(-120px) rotate(-20deg);
+}
+
+.remove {
+    animation: removeBox 1s ease forwards;
+}
+
+@keyframes removeBox {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.5); }
+}
+
+.click-text {
+    margin-top: 20px;
+    font-size: 18px;
+    text-shadow: 0 0 10px gold;
+    animation: pulseText 1.5s infinite;
+}
+
+.hide-text {
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+@keyframes pulseText {
+    0% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0.7; transform: scale(1); }
+}
+
+.content {
+    display: none;
+    position: absolute;
+    top: 20%;
+    width: 90%;
+    max-width: 600px;
+    z-index: 2;
+    animation: fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(50px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+h1 {
+    font-size: 42px;
+    color: gold;
+    text-shadow: 0 0 20px gold;
+}
+
+.name {
+    font-size: 30px;
+    font-weight: bold;
+    color: #ffccff;
+}
+
+.message {
+    font-size: 18px;
+    margin-top: 15px;
+    padding: 0 10px;
+}
+
+/* ✅ Updated Regards styling */
+.regards {
+    text-align: left;
+    margin-top: 15px;
+    font-size: 18px;
+}
+
+/* ✅ Glowing name */
+.glow-name {
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 10px gold, 0 0 20px gold, 0 0 30px gold;
+}
+
+.sparkle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: white;
+    border-radius: 50%;
+    animation: sparkleAnim 2s linear infinite;
+}
+
+@keyframes sparkleAnim {
+    from {transform: translateY(0); opacity: 1;}
+    to {transform: translateY(-200px); opacity: 0;}
+}
+
+@media (max-width: 768px) {
+    .gift-box {
+        width: 120px;
+        height: 120px;
+    }
+
+    .lid {
+        width: 120px;
+        height: 30px;
+        top: -30px;
+    }
+
+    .ribbon {
+        width: 25px;
+        height: 120px;
+        left: 48px;
+    }
+
+    .ribbon-h {
+        width: 120px;
+        height: 25px;
+        top: 48px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .name {
+        font-size: 24px;
+    }
+
+    .message {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gift-box {
+        width: 100px;
+        height: 100px;
+    }
+
+    .lid {
+        width: 100px;
+        height: 25px;
+        top: -25px;
+    }
+
+    .ribbon {
+        width: 20px;
+        height: 100px;
+        left: 40px;
+    }
+
+    .ribbon-h {
+        width: 100px;
+        height: 20px;
+        top: 40px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .name {
+        font-size: 20px;
+    }
+
+    .message {
+        font-size: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div id="player" style="display:none;"></div>
+
+<audio id="naatAudio" src="videoplayback.m4a"></audio>
+
+<div class="gift-box" onclick="openGift()" id="gift">
+    <div class="lid"></div>
+    <div class="ribbon"></div>
+    <div class="ribbon-h"></div>
+</div>
+
+<div class="click-text" id="clickText"> Click me </div>
+
+<div class="content" id="content">
+    <h1>🎉 EID MUBARAK 🎉</h1>
+    <div class="name">✨ TO ALL NEAR AND DEAR FAMILY MEMBERS , FRIENDS , BROTHERS & SISTERS !!! 🌙</div>
+    <div class="message">
+        May this Eid bring endless happiness, success, and love into your life 💖✨  
+        Stay blessed and keep smiling always! 🌙<br><br>
+
+        <div class="regards">
+            REGARDS : <span class="glow-name">💖 MUHAMMAD ABDULLAH</span>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+let player;
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        videoId: 'K7T2k0p9l9Q',
+        playerVars: { autoplay: 0 }
+    });
+}
+
+function openGift() {
+    let gift = document.getElementById("gift");
+    let clickText = document.getElementById("clickText");
+    let audio = document.getElementById("naatAudio");
+
+    clickText.classList.add("hide-text");
+    setTimeout(() => {
+        clickText.style.display = "none";
+    }, 600);
+
+    if (player) {
+        player.playVideo();
+    }
+
+    if (audio) {
+        audio.play();
+    }
+
+    gift.classList.add("open");
+
+    setTimeout(() => {
+        gift.classList.add("remove");
+    }, 700);
+
+    setTimeout(() => {
+        gift.style.display = "none";
+    }, 1700);
+
+    setTimeout(() => {
+        document.getElementById("content").style.display = "block";
+        startFireworks();
+    }, 800);
+
+    for (let i = 0; i < 40; i++) {
+        let s = document.createElement("div");
+        s.className = "sparkle";
+        s.style.left = Math.random() * window.innerWidth + "px";
+        s.style.top = Math.random() * window.innerHeight + "px";
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 2000);
+    }
+}
+
+// FIREWORKS
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function startFireworks() {
+    setInterval(createFirework, 500);
+}
+
+function createFirework() {
+    let x = Math.random() * canvas.width;
+    let y = Math.random() * canvas.height / 2;
+
+    for (let i = 0; i < 50; i++) {
+        particles.push({
+            x, y,
+            angle: Math.random() * 2 * Math.PI,
+            speed: Math.random() * 5 + 2,
+            radius: 2
+        });
+    }
+}
+
+function animate() {
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p, i) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.speed *= 0.95;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "hsl(" + Math.random()*360 + ",100%,50%)";
+        ctx.fill();
+
+        if (p.speed < 0.5) particles.splice(i, 1);
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
